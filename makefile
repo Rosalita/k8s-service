@@ -4,7 +4,7 @@
 KIND            := kindest/node:v1.27.2 # https://hub.docker.com/r/kindest/node/tags
 POSTGRES        := postgres:15.3 # https://hub.docker.com/_/postgres
 
-KIND_CLUSTER    := rosie-starter-cluster
+KIND_CLUSTER    := starter-cluster
 
 
 # ==============================================================================
