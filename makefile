@@ -41,6 +41,14 @@ dev-down-local:
 	kind delete cluster --name $(KIND_CLUSTER)
 
 # ==============================================================================
+# Kubectl 
+
+dev-status:
+	kubectl get nodes -o wide
+	kubectl get svc -o wide
+	kubectl get pods -o wide --watch --all-namespaces
+
+# ==============================================================================
 # Modules support
 
 tidy:
