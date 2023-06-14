@@ -1,6 +1,8 @@
 # ==============================================================================
 # Define dependencies
 
+GOLANG          := golang:1.20
+ALPINE          := alpine:3.18
 KIND            := kindest/node:v1.27.2 # https://hub.docker.com/r/kindest/node/tags
 POSTGRES        := postgres:15.3 # https://hub.docker.com/_/postgres
 
@@ -16,13 +18,27 @@ dev-brew:
 	brew list kustomize || brew install kustomize
 
 dev-docker:
+	docker pull $(GOLANG)
+	docker pull $(ALPINE)
 	docker pull $(KIND)
 	docker pull $(POSTGRES)
 
 # ==============================================================================
 # Building containers
 
+# Instead of a hardcoded version, something like $(shell git rev-parse --short HEAD)
+# would set the version to git revision hash.
+VERSION := 1.0
 
+all: sales
+
+sales:
+	docker build \
+		-f zarf/docker/dockerfile.sales-api \
+		-t sales-api:$(VERSION) \
+		--build-arg BUILD_REF=$(VERSION) \
+		--build-arg BUILD_DATE=`date -u +"%Y-%m-%dT%H:%M:%SZ"` \
+		.
 
 # ==============================================================================
 # Running from within k8s/kind
@@ -55,3 +71,8 @@ tidy:
 	rm -rf vendor
 	go mod tidy
 	go mod vendor
+
+# ==============================================================================
+# Running tests locally
+test:
+	CGO_ENABLED=0 go test -count=1 ./...

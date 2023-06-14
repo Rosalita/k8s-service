@@ -11,6 +11,9 @@ import (
 	"go.uber.org/zap"
 )
 
+// At build time, linker flags are used to overwrite this variable with the build reference.
+var build = "develop"
+
 func main() {
 	log, err := logger.New("SALES_API")
 	if err != nil {
@@ -27,6 +30,8 @@ func main() {
 }
 
 func run(log *zap.SugaredLogger) error {
+	log.Infow("build version", build)
+
 	// =========================================================================
 	// GOMAXPROCS
 	//

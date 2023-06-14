@@ -1,0 +1,43 @@
+# Build the Go Binary.
+FROM golang:1.20 as build_sales-api
+
+# By default CGO_ENABLED is set to 1. This means the compiler is free to use C libraries
+# to build, compile and link to Go binaries. The race detector uses C library support.
+# CGO has been disabled on build to guarantee that C library support has not been invoked.
+ENV CGO_ENABLED 0 
+ARG BUILD_REF
+
+# Copy the source code into the container. This is possible as the project uses vendoring.
+# This copy will respect the .dockerignore file.
+COPY . /service
+
+# If the project chose to not using vendoring, would copy go.mod and go.sum over then go mod download.
+# RUN mkdir /service
+# COPY go.* /service/
+# WORKDIR /service
+# RUN go mod download
+
+# Build the service binary.
+WORKDIR /service/app/services/sales-api
+# -ldflags represents linker flags and can pass a flag to the Go toolchain linker.
+# The linker flags can be used to change the value of a variable at build time.
+# This allows dynamic information to be introduced to the binary.
+# In this case, the variable build in main.go is overwritten with the build referemce.
+RUN go build -ldflags "-X main.build=${BUILD_REF}"
+
+# Run the Go Binary in Alpine.
+FROM alpine:3.17
+ARG BUILD_DATE
+ARG BUILD_REF
+# Set up a group and a user
+RUN addgroup -g 1000 -S sales && \
+    adduser -u 1000 -h /service -G sales -S sales
+# The binary is set to the group and user with chown so that it does not have root access to its environment.    
+COPY --from=build_sales-api --chown=sales:sales /service/app/services/sales-api/sales-api /service/sales-api
+WORKDIR /service
+USER sales
+CMD ["./sales-api"]
+
+LABEL org.opencontainers.image.created="${BUILD_DATE}" \
+      org.opencontainers.image.title="sales-api" \
+      org.opencontainers.image.revision="${BUILD_REF}" \

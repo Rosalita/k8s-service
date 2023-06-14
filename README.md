@@ -8,10 +8,15 @@ Check installed ok with command to list all containers
 ```
 docker ps
 ```
+
 2. Get brew, see https://brew.sh/
 3. Install Make `brew install make`
 4. Use make to install cli tools with brew `make dev-brew`
 5. Use make to fetch docker images `make dev-docker`
+
+# Building Docker images locally
+Use `make all`
+
 
 # Running the cluster
 Use `make dev-up-local` to start the cluster
@@ -32,4 +37,4 @@ The `business` layer contains packages which are specific to solving the busines
 The `foundation` layer is packages which are not necessarily specific to the business layer, but we need them to build out services and tooling. They could potentially become third party dependencies one day and may one day move to their own repos. So we need to make sure that packages at this layer do not import each other. Packages at this layer should be treated like the standard library for our projects.
 
 ## Zarf
-A zarf is a cardboard sleeve that goes around a coffee cup to protect you. The zarf layer protects us from being burnt by containers. This is where Docker and Kubernetes code lives.
+A zarf is a cardboard sleeve that goes around a coffee cup to protect you. The zarf layer protects us from being burnt by containers. This is where Docker and Kubernetes code lives. In the `docker` sub folder, every service which is being built has its own dockerfile. Only build version and build date are passed into dockerfiles as args. The more things that are hardcoded in the dockerfile, the easier they are to manage.
