@@ -1,4 +1,4 @@
-module github.com/Rosalita/kind
+module github.com/Rosalita/k8s-service
 
 go 1.20
 

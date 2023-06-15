@@ -7,7 +7,7 @@ import (
 	"runtime"
 	"syscall"
 
-	"github.com/Rosalita/kind/foundation/logger"
+	"github.com/Rosalita/k8s-service/foundation/logger"
 	"go.uber.org/zap"
 )
 

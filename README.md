@@ -18,9 +18,13 @@ docker ps
 Use `make all`
 
 
-# Running the cluster
-Use `make dev-up-local` to start the cluster
-Use `make dev-down-local` to stop the local cluster
+# Running the service in the cluster
+`make dev-up-local` to start the cluster
+`make dev-load` to load the service image into KIND
+`make dev-apply` to build kustomize and apply changes to the cluster
+`make dev-logs` to see the logs of the service running in the cluster
+`make dev-down-local` to stop the local cluster
+
 
 # Interacting with the cluster
 To see a list of clusters names in kind `kind get clusters`
