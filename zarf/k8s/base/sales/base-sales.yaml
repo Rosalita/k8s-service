@@ -1,0 +1,23 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: sales-system
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: sales # name of the pod
+  namespace: sales-system # the name space where this pod will be created
+spec:
+  selector:
+    matchLabels:
+      app: sales # labels let kubectl query with -l
+  template:
+    metadata:
+      labels:
+        app: sales
+    spec:
+      terminationGracePeriodSeconds: 60
+      containers:
+      - name: sales-api
+        image: sales-api-image
