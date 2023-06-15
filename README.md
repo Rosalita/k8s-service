@@ -41,4 +41,9 @@ A zarf is a cardboard sleeve that goes around a coffee cup to protect you. The z
 
 In the `k8s` sub folder, the `dev` folder contains configuration for a local cluster (KIND). The `base` folder contains all the kubernetes manifests for services which are being deployed, grouped by service name. Base config is the same regardless of the environment the service is being deployed into. Each service will have a `service-name.yaml` and a `kustomization.yaml`. Changes will be made to what's in `base` to deploy to different environments. 
 
-The `---` in the manifest represents where a new configuration definition begins. Each section separate by `---` could be a separate file. First thing to do is define a namespace. Second thing to do is to definte a deployment.
+The `---` in the manifest represents where a new configuration definition begins. Each section separate by `---` could be a separate file. First thing to do is define a namespace. Second thing to do is to define a deployment.
+
+Kustomize takes multiple yaml files and stitches them together to create one yaml file that can be applied. Kustomize does this with the command `kustomize build zarf/k8s/dev/sales`
+
+# KIND
+Kind requires that local images need to be loaded into a staging area.
