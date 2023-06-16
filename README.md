@@ -17,7 +17,6 @@ docker ps
 # Building Docker images locally
 Use `make all`
 
-
 # Running the service in the cluster
 `make dev-up-local` to start the cluster
 `make dev-load` to load the service image into KIND
@@ -25,6 +24,8 @@ Use `make all`
 `make dev-logs` to see the logs of the service running in the cluster
 `make dev-down-local` to stop the local cluster
 
+after updating k8s configuration `make dev-update-apply`
+after updating source code `make dev-update`
 
 # Interacting with the cluster
 To see a list of clusters names in kind `kind get clusters`
