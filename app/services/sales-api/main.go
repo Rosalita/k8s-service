@@ -31,7 +31,7 @@ func main() {
 }
 
 func run(log *zap.SugaredLogger) error {
-	log.Infow("build version", build)
+	log.Infow("build version", "BUILD", build)
 
 	// =========================================================================
 	// GOMAXPROCS
