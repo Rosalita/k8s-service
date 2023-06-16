@@ -9,6 +9,7 @@ import (
 
 	"github.com/Rosalita/k8s-service/foundation/logger"
 	"go.uber.org/zap"
+	"go.uber.org/automaxprocs/maxprocs"
 )
 
 // At build time, linker flags are used to overwrite this variable with the build reference.
@@ -40,6 +41,12 @@ func run(log *zap.SugaredLogger) error {
 	// executing simultaneously. CPU is at 100% capacity when it is runnning the 
 	// GOMAXPROCS number of Go routines in parallel. The number of logical processors and cores
 	// should always be the same to avoid cycles being wasted by context switching.
+
+	// Align GOMAXPROCS in the container with the number of processors available in k8s.
+	opt := maxprocs.Logger(log.Infof)
+	if _, err := maxprocs.Set(opt); err != nil {
+		return fmt.Errorf("maxprocs: %w", err)
+	}
 
 	log.Infow("startup", "GOMAXPROCS", runtime.GOMAXPROCS(0))
 	defer log.Infow("shutdown")

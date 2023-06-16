@@ -52,3 +52,6 @@ Kustomize takes multiple yaml files and stitches them together to create one yam
 
 # KIND
 Kind requires that local images need to be loaded into a staging area.
+
+# K8 Quotas
+Setting cpu limits on a container, will not automatically change the maximum processors the go code uses to run. GOMAXPROCS will not change if only the k8s configuration is changed. This is because Docker is not Kubernetes aware. A Go program with 4 threads will be context switching if Kubernetes is limited to 2 cores.
