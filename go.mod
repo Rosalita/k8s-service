@@ -3,6 +3,7 @@ module github.com/Rosalita/k8s-service
 go 1.20
 
 require (
+	github.com/ardanlabs/conf/v3 v3.1.6
 	go.uber.org/automaxprocs v1.5.2
 	go.uber.org/zap v1.24.0
 )

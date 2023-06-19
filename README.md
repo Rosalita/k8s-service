@@ -55,3 +55,6 @@ Kind requires that local images need to be loaded into a staging area.
 
 # K8 Quotas
 Setting cpu limits on a container, will not automatically change the maximum processors the go code uses to run. GOMAXPROCS will not change if only the k8s configuration is changed. This is because Docker is not Kubernetes aware. A Go program with 4 threads will be context switching if Kubernetes is limited to 2 cores.
+
+# Configuration
+The only place configuration is allowed to be read is in `main.go`. Configuration should be read in at the start of the app and passed to where it needs to be. All configuration should have a default value which works in the dev environment. Ideally those defaults work in staging and production environments. The service should have allow for `--help` which shows everything that can be configured, default values and how to override them. The service should allow config to be overridden by an env var or a cli flag, with cli flag taking precedence. Arden labs `conf` package does this.

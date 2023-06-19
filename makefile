@@ -98,5 +98,12 @@ tidy:
 
 # ==============================================================================
 # Running tests locally
+
 test:
 	CGO_ENABLED=0 go test -count=1 ./...
+
+# ==============================================================================
+# Run the code outside of docker
+
+run:
+	go run app/services/sales-api/main.go
