@@ -107,3 +107,14 @@ test:
 
 run:
 	go run app/services/sales-api/main.go | go run app/tooling/logfmt/main.go
+
+# ==============================================================================
+# Metrics
+# requires installation of expvarmon in gopath bin folder, which can be done with:
+# go install github.com/divan/expvarmon@latest
+
+metrics-local:
+	expvarmon -ports=":4000" -vars="build,requests,goroutines,errors,panics,mem:memstats.Alloc"
+	
+metrics-view:
+	expvarmon -ports="sales-service.sales-system.svc.cluster.local:4000" -vars="build,requests,goroutines,errors,panics,mem:memstats.Alloc"

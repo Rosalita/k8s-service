@@ -58,3 +58,7 @@ Setting cpu limits on a container, will not automatically change the maximum pro
 
 # Configuration
 The only place configuration is allowed to be read is in `main.go`. Configuration should be read in at the start of the app and passed to where it needs to be. All configuration should have a default value which works in the dev environment. Ideally those defaults work in staging and production environments. The service should have allow for `--help` which shows everything that can be configured, default values and how to override them. The service should allow config to be overridden by an env var or a cli flag, with cli flag taking precedence. Arden labs `conf` package does this.
+
+# Debugging
+A mux has been brought up on port 4000 that has the ability to get stack traces, cpu and memory profiles, locking profiles and traces of the code while it is running. A mux is a piece of code that registers handler functions to a specific url. Then when a request comes in, if the url matches the route, execute those handlers. The standard library serve mux is being used as a router. 
+The routes are defined in the mux and associated with a handler function. Never use the default serve mux as any package imports can expose endpoints on it. Always create a new mux, specifying exactly what should be exposed. When running locally debug information will be exposed at `http://localhost:4000/debug/pprof` and metrics information at `http://localhost:4000/debug/vars`. When running locally, expvarmon can be used to view a metrics dashboard locally with `make metrics-local`
