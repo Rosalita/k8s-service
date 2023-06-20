@@ -60,6 +60,7 @@ dev-up-local:
 	kind load docker-image $(POSTGRES) --name $(KIND_CLUSTER)
 
 dev-down-local:
+	telepresence quit -s
 	kind delete cluster --name $(KIND_CLUSTER)
 
 dev-status:
@@ -78,6 +79,9 @@ dev-restart:
 	kubectl rollout restart deployment sales --namespace=sales-system
 
 dev-logs:
+	kubectl logs --namespace=sales-system -l app=sales --all-containers=true -f --tail=100 --max-log-requests=6
+
+dev-logs-fmt:
 	kubectl logs --namespace=sales-system -l app=sales --all-containers=true -f --tail=100 --max-log-requests=6 | go run app/tooling/logfmt/main.go -service=SALES-API
 
 dev-describe:

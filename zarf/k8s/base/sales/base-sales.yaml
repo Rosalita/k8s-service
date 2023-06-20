@@ -26,9 +26,9 @@ spec:
               containerPort: 3000 
             - name: sales-api-debug
               containerPort: 4000
-# ---
-# apiVersion: v1
-# kind: Service # A service is responsible for enabling network access to a set of pods.
-# metadata:
-#   name: sales-service
-#   namespace: sales-system
+---
+apiVersion: v1
+kind: Service # A service is responsible for enabling network access to a set of pods.
+metadata:
+  name: sales-service
+  namespace: sales-system
