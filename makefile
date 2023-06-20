@@ -4,10 +4,10 @@
 GOLANG          := golang:1.20
 ALPINE          := alpine:3.18
 KIND            := kindest/node:v1.27.2 # https://hub.docker.com/r/kindest/node/tags
+TELEPRESENCE    := docker.io/datawire/tel2:2.10.4
 POSTGRES        := postgres:15.3 # https://hub.docker.com/_/postgres
 
 KIND_CLUSTER    := starter-cluster
-
 
 # ==============================================================================
 # Install dependencies
@@ -21,6 +21,7 @@ dev-docker:
 	docker pull $(GOLANG)
 	docker pull $(ALPINE)
 	docker pull $(KIND)
+	docker pull $(TELEPRESENCE)
 	docker pull $(POSTGRES)
 
 # ==============================================================================
@@ -43,7 +44,7 @@ sales:
 # ==============================================================================
 # Running from within k8s/kind
 
-dev-up-local:
+dev-up:
 	kind create cluster \
 		--image $(KIND) \
 		--name $(KIND_CLUSTER) \
@@ -51,9 +52,12 @@ dev-up-local:
 
 	kubectl wait --timeout=120s --namespace=local-path-storage --for=condition=Available deployment/local-path-provisioner
 
-	kind load docker-image $(POSTGRES) --name $(KIND_CLUSTER)
+	kind load docker-image $(TELEPRESENCE) --name $(KIND_CLUSTER)
+	telepresence --context=kind-$(KIND_CLUSTER) helm install
+	telepresence --context=kind-$(KIND_CLUSTER) connect
 
-dev-down-local:
+dev-down:
+	telepresence quit -s
 	kind delete cluster --name $(KIND_CLUSTER)
 
 dev-status:
@@ -72,6 +76,9 @@ dev-restart:
 	kubectl rollout restart deployment sales --namespace=sales-system
 
 dev-logs:
+	kubectl logs --namespace=sales-system -l app=sales --all-containers=true -f --tail=100 --max-log-requests=6
+
+dev-logs-fmt:
 	kubectl logs --namespace=sales-system -l app=sales --all-containers=true -f --tail=100 --max-log-requests=6 | go run app/tooling/logfmt/main.go -service=SALES-API
 
 dev-describe:

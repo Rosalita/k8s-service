@@ -13,6 +13,7 @@ docker ps
 3. Install Make `brew install make`
 4. Use make to install cli tools with brew `make dev-brew`
 5. Use make to fetch docker images `make dev-docker`
+6. Install telepresence CLI, see https://www.telepresence.io/docs/latest/quick-start/
 
 # Building Docker images locally
 Use `make all`
@@ -62,3 +63,10 @@ The only place configuration is allowed to be read is in `main.go`. Configuratio
 # Debugging
 A mux has been brought up on port 4000 that has the ability to get stack traces, cpu and memory profiles, locking profiles and traces of the code while it is running. A mux is a piece of code that registers handler functions to a specific url. Then when a request comes in, if the url matches the route, execute those handlers. The standard library serve mux is being used as a router. 
 The routes are defined in the mux and associated with a handler function. Never use the default serve mux as any package imports can expose endpoints on it. Always create a new mux, specifying exactly what should be exposed. When running locally debug information will be exposed at `http://localhost:4000/debug/pprof` and metrics information at `http://localhost:4000/debug/vars`. When running locally, expvarmon can be used to view a metrics dashboard locally with `make metrics-local`
+
+# Telepresence
+To use Telepresence, the Telepresence CLI tooling must first be installed. Then the Telepresence image must be deployed inside the cluster. This is done by loading the docker image and telling Telepresence to use helm to install. 
+`make dev-tel` can be used to start telepresence. Note that the first time Telepresence is run, it will require password so that it can create some files.
+The URL used to access the cluster through Telepresence is:
+`http://sales-service.sales-system.svc.cluster.local:4000/debug/pprof`
+This is the http://<service>.<namespace>.svc.cluster.local:<port>/endpoint

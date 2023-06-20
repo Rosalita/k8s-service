@@ -23,9 +23,26 @@ spec:
       dnsPolicy: ClusterFirstWithHostNet
       hostNetwork: true
       containers:
-      - name: sales-api
-        resources:
-          limits:
-            cpu: "2000m" # Up to 2 full cores
-          requests:
-            cpu: "1000m" # Use 1 full core
+        - name: sales-api
+          resources:
+            limits:
+              cpu: "2000m" # Up to 2 full cores
+            requests:
+              cpu: "1000m" # Use 1 full core
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: sales-service
+  namespace: sales-system
+spec:
+  selector:
+    app: sales
+  type: ClusterIP
+  ports: # ports on a service are "outside" ports
+    - name: sales-api
+      port: 3000
+      targetPort: sales-api # they match to "inside" ports on a deployment.
+    - name: sales-api-debug
+      port: 4000
+      targetPort: sales-api-debug
