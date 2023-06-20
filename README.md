@@ -69,4 +69,4 @@ To use Telepresence, the Telepresence CLI tooling must first be installed. Then 
 `make dev-tel` can be used to start telepresence. Note that the first time Telepresence is run, it will require password so that it can create some files.
 The URL used to access the cluster through Telepresence is:
 `http://sales-service.sales-system.svc.cluster.local:4000/debug/pprof`
-This is the http://<service>.<namespace>.svc.cluster.local:<port>/endpoint
+This is the `http://<service>.<namespace>.svc.cluster.local:<port>/endpoint`
