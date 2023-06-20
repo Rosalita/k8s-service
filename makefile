@@ -9,11 +9,6 @@ POSTGRES        := postgres:15.3 # https://hub.docker.com/_/postgres
 
 KIND_CLUSTER    := starter-cluster
 
-dev-tel:
-	kind load docker-image $(TELEPRESENCE) --name $(KIND_CLUSTER)
-	telepresence --context=kind-$(KIND_CLUSTER) helm install
-	telepresence --context=kind-$(KIND_CLUSTER) connect
-
 # ==============================================================================
 # Install dependencies
 
@@ -49,7 +44,7 @@ sales:
 # ==============================================================================
 # Running from within k8s/kind
 
-dev-up-local:
+dev-up:
 	kind create cluster \
 		--image $(KIND) \
 		--name $(KIND_CLUSTER) \
@@ -57,9 +52,11 @@ dev-up-local:
 
 	kubectl wait --timeout=120s --namespace=local-path-storage --for=condition=Available deployment/local-path-provisioner
 
-	kind load docker-image $(POSTGRES) --name $(KIND_CLUSTER)
+	kind load docker-image $(TELEPRESENCE) --name $(KIND_CLUSTER)
+	telepresence --context=kind-$(KIND_CLUSTER) helm install
+	telepresence --context=kind-$(KIND_CLUSTER) connect
 
-dev-down-local:
+dev-down:
 	telepresence quit -s
 	kind delete cluster --name $(KIND_CLUSTER)
 
