@@ -13,6 +13,7 @@ docker ps
 3. Install Make `brew install make`
 4. Use make to install cli tools with brew `make dev-brew`
 5. Use make to fetch docker images `make dev-docker`
+6. Install telepresence, see https://www.telepresence.io/docs/latest/quick-start/
 
 # Building Docker images locally
 Use `make all`

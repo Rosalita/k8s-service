@@ -4,10 +4,15 @@
 GOLANG          := golang:1.20
 ALPINE          := alpine:3.18
 KIND            := kindest/node:v1.27.2 # https://hub.docker.com/r/kindest/node/tags
+TELEPRESENCE    := docker.io/datawire/tel2:2.10.4
 POSTGRES        := postgres:15.3 # https://hub.docker.com/_/postgres
 
 KIND_CLUSTER    := starter-cluster
 
+dev-tel:
+	kind load docker-image $(TELEPRESENCE) --name $(KIND_CLUSTER)
+	telepresence --context=kind-$(KIND_CLUSTER) helm install
+	telepresence --context=kind-$(KIND_CLUSTER) connect
 
 # ==============================================================================
 # Install dependencies
@@ -21,6 +26,7 @@ dev-docker:
 	docker pull $(GOLANG)
 	docker pull $(ALPINE)
 	docker pull $(KIND)
+	docker pull $(TELEPRESENCE)
 	docker pull $(POSTGRES)
 
 # ==============================================================================

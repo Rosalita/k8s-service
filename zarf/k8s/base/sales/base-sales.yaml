@@ -4,7 +4,7 @@ metadata:
   name: sales-system
 ---
 apiVersion: apps/v1
-kind: Deployment
+kind: Deployment # A deployment is responsible for keeping a set of pods running.
 metadata:
   name: sales # name of the pod
   namespace: sales-system # the name space where this pod will be created
@@ -19,5 +19,16 @@ spec:
     spec:
       terminationGracePeriodSeconds: 60
       containers:
-      - name: sales-api
-        image: sales-api-image
+        - name: sales-api
+          image: sales-api-image
+          ports: # ports on a deployment are "inside" ports.
+            - name: sales-api
+              containerPort: 3000 
+            - name: sales-api-debug
+              containerPort: 4000
+# ---
+# apiVersion: v1
+# kind: Service # A service is responsible for enabling network access to a set of pods.
+# metadata:
+#   name: sales-service
+#   namespace: sales-system
