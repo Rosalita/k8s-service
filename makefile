@@ -44,7 +44,7 @@ sales:
 # ==============================================================================
 # Running from within k8s/kind
 
-dev-up:
+dev-kind:
 	kind create cluster \
 		--image $(KIND) \
 		--name $(KIND_CLUSTER) \
@@ -54,6 +54,8 @@ dev-up:
 
 	kind load docker-image $(TELEPRESENCE) --name $(KIND_CLUSTER)
 	telepresence --context=kind-$(KIND_CLUSTER) helm install
+
+dev-up: dev-kind
 	telepresence --context=kind-$(KIND_CLUSTER) connect
 
 dev-down:
@@ -111,6 +113,7 @@ test:
 
 # ==============================================================================
 # Run the code outside of docker
+# curl -il sales-service.sales-system.svc.cluster.local:4000/debug/vars
 
 run:
 	go run app/services/sales-api/main.go | go run app/tooling/logfmt/main.go

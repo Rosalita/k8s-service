@@ -19,7 +19,7 @@ docker ps
 Use `make all`
 
 # Running the service in the cluster
-`make dev-up-local` to start the cluster
+`make dev-up` to start the cluster
 `make dev-load` to load the service image into KIND
 `make dev-apply` to build kustomize and apply changes to the cluster
 `make dev-logs` to see the logs of the service running in the cluster
@@ -31,6 +31,7 @@ after updating source code `make dev-update`
 # Interacting with the cluster
 To see a list of clusters names in kind `kind get clusters`
 To see cluster info, use the cluster name e.g. `kubectl cluster-info --context kind-starter-cluster`
+to see the status of the cluster `make dev-status`
 
 # Project layers
 ## App
