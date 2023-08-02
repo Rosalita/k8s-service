@@ -114,6 +114,7 @@ test:
 # ==============================================================================
 # Run the code outside of docker
 # curl -il sales-service.sales-system.svc.cluster.local:4000/debug/vars
+# curl -il sales-service.sales-system.svc.cluster.local:3000/test
 
 run:
 	go run app/services/sales-api/main.go | go run app/tooling/logfmt/main.go
