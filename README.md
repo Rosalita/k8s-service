@@ -71,3 +71,6 @@ To use Telepresence, the Telepresence CLI tooling must first be installed. Then 
 The URL used to access the cluster through Telepresence is:
 `http://sales-service.sales-system.svc.cluster.local:4000/debug/pprof`
 This is the `http://<service>.<namespace>.svc.cluster.local:<port>/endpoint`
+
+# Design Philosophy
+A Handlers should aim for consistency with each other. If the handler does too much, overtime each developer will start doing things a different way and consistency will be lost. A handler function should only accept the external output using REST based conventions, validate any data that came in, call into the business layer, when the business layer returns if that return was ok formulate the response which goes out. If there is an error, the handler should not process the error it should either return or give the error to something else that can process it for consistency. Handlers should not be logging, they should return an error to something that can process the error. Context is important, we need it to be able to implement cancellations and shutdowns. Any function which does io or needs to be traced from a debugging perspective needs to take context as its first parameter.
