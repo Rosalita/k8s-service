@@ -18,13 +18,15 @@ type Handler func(ctx context.Context, w http.ResponseWriter, r *http.Request) e
 type App struct {
 	*httptreemux.ContextMux // embedded pointer, grants App the methods of ContextMux
 	shutdown                chan os.Signal
+	mw                      []Middleware
 }
 
 // NewApp creates an App value that handles a set of routes for the application.
-func NewApp(shutdown chan os.Signal) *App {
+func NewApp(shutdown chan os.Signal, mw ...Middleware) *App {
 	return &App{
 		ContextMux: httptreemux.NewContextMux(),
 		shutdown:   shutdown,
+		mw:         mw,
 	}
 }
 
@@ -33,21 +35,21 @@ func NewApp(shutdown chan os.Signal) *App {
 // method on *httptreemux.ContextMux.
 // This prevents *httptreemux.ContextMux's Handle method from being
 // promoted up to App.
-func (a *App) Handle(method string, path string, handler Handler) {
+func (a *App) Handle(method string, path string, handler Handler, mw ...Middleware) {
+	// Bind route level middleware first.
+	handler = wrapMiddleware(mw, handler)
+	// Then bind application level middleware.
+	handler = wrapMiddleware(a.mw, handler)
 
 	// A literal function called h is defined to be the outer function.
 	// The handler is called by h. This allows for code to be added
 	// before and after h is called.
 	h := func(w http.ResponseWriter, r *http.Request) {
-
-		// to do: add code here
 		if err := handler(r.Context(), w, r); err != nil {
 			// to do: handle error
 			return
 		}
-		// to do: add code here
 	}
 
 	a.ContextMux.Handle(method, path, h)
-
 }
